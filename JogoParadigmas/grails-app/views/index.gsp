@@ -1,3 +1,5 @@
+<%@ page import="game.PlayerController" %>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>

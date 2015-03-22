@@ -1,7 +1,7 @@
 package game
 
 class PlayerController{
-	def play = {
+	static play() {
 
 		[player:new Player(100,100)]
 	}
