@@ -44,6 +44,8 @@ function updatePlayer(){
 	x += vx;
 	y += vy;
 
+	checkBoundaries();
+
 	ctx.fillRect(x,y,100,100);
 }
 
@@ -95,6 +97,25 @@ function KeyReleased(e){
 function initializeKeys(){
 	for (var i = 0; i < 123; i++) {
 		pressedKeys[i] = false;
+	}
+}
+
+function checkBoundaries(){
+	if(x + 100 >= canvas.width){
+		x = canvas.width - 100;
+		vx /= 2;
+	}
+	else if(x <= 0){
+		x = 0;
+		vx /= 2;
+	}
+	if(y + 100 >= canvas.height){
+		y = canvas.height - 100;
+		vy /= 2;
+	}
+	else if(y <= 0){
+		y = 0;
+		vy /= 2;
 	}
 }
 
