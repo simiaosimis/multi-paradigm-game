@@ -45,7 +45,7 @@ function Shot(x, y, mx, my, xToFollow, yToFollow){
 	this.x = x;
 	this.y = y;
 	this.mx = mx - 197;
-	this.my = my - 136;
+	this.my = my - 136 - (240 - window.pageYOffset);
 	this.xToFollow = xToFollow;
 	this.yToFollow = yToFollow;
 }
@@ -214,7 +214,7 @@ function checkBoundaries(){
 
 window.onkeydown = KeyPressed;
 window.onkeyup = KeyReleased;
-window.onclick = mouseController;
+canvas.onclick = mouseController;
 
 var lastTime;
 
