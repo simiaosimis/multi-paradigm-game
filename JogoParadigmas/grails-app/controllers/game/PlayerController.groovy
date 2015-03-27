@@ -1,9 +1,13 @@
 package game
 
 class PlayerController{
-	static play() {
+	
+	def player(){
+		[lista : Player.list() as grails.converters.JSON]
+	}
 
-		[player:new Player(100,100)]
+	def printa(){
+		print params.attr
 	}
 
 }
