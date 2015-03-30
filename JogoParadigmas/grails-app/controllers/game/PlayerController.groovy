@@ -2,7 +2,7 @@ package game
 
 class PlayerController{
 	
-	def player(){
+	def index(){
 		[lista : Player.list() as grails.converters.JSON]
 	}
 
