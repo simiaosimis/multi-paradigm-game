@@ -39,6 +39,11 @@ function Enemy(x, y){
 	this.y = y;
 	this.width = 50;
 	this.height = 50;
+	this.alertState = false;
+	this.range = 50;
+	this.ok;
+	this.deadX = -100;
+	this.deadY = -100;
 }
 
 function Shot(x, y, mx, my, xToFollow, yToFollow){
@@ -64,35 +69,13 @@ function update(dt){
 		PLAYER_FRICTION = 0.95;
 	}
 
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-
-	updateKeyboard(dt);
-	updateShotCollision();
-	updatePlayer();
+	handleKeyboard(dt);
 	updateEnemy();
+	updateShotCollision(dt);
+	updatePlayer();
 	updateShot();
-}
 
-function updateShotCollision(){
-	for(var i = 0; i<shots.length; i++){
-		for(var j = 0; j<enemy.length; j++){
-			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width)){
-				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
-					shots.splice(i,1);
-					enemy.splice(j,1);
-					return;
-				}	
-			}
-		}
-	}
-	
-}
 
-function updateEnemy(){
-	ctx.fillStyle = "blue";
-	for(var i = 0; i<enemy.length; i++){
-		ctx.fillRect(enemy[i].x,enemy[i].y,50,50);
-	}
 }
 
 function updatePlayer(){
@@ -104,16 +87,39 @@ function updatePlayer(){
 	y += vy;
 
 	checkBoundaries();
+}
 
-	ctx.fillStyle = "black";
-	ctx.fillRect(x,y,100,100);
+function updateEnemy(){
+
+	for(var i = 0; i<enemy.length; i++){
+
+		if(enemy[i].alertState){
+
+			var direction = randomize(3) + 1;
+			console.log(direction);
+			if(direction == 1){
+				enemy[i].x += 50;
+			}
+			else if(direction == 2){
+				enemy[i].x -= 100;
+			}
+			else if(direction == 3){
+				enemy[i].y += 50;
+			}
+			else if(direction == 4){
+				enemy[i].y -= 100;
+			}
+			enemy[i].alertState = false;
+			return;
+		}
+	}
+
+	checkBoundariesEnemy();
 }
 
 function updateShot(){
 
 	for(var i = 0; i<shots.length; i++){
-
-		ctx.clearRect(shots[i].x-1,shots[i].y-1,12,12);
 
 		shots[i].x += shots[i].xToFollow * 10;
 		shots[i].y += shots[i].yToFollow * 10;
@@ -122,15 +128,59 @@ function updateShot(){
 			shots.splice(i,1)
 			return;
 		}
+	}
+}
 
+function updateShotCollision(dt){
+	
+	for(var i = 0; i<shots.length; i++){
+		for(var j = 0; j<enemy.length; j++){
+			if(shots[i].x > (enemy[j].x - enemy[j].range) && shots[i].x < (enemy[j].x + enemy[j].width + enemy[j].range)){
+				if(shots[i].y > (enemy[j].y - enemy[j].range) && shots[i].y < (enemy[j].y + enemy[j].height + enemy[j].range)){
+					enemy[j].alertState = true;
+				}
+			}
+			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width)){
+				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
+					shots.splice(i,1);
+					enemy.splice(j,1);
+					return;
+				}	
+			}
+		}
+	}	
+}
+
+function render(){
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	renderEnemy();
+	renderPlayer();
+	renderShot();
+
+}
+
+function renderEnemy(){
+	
+	for(var i = 0; i<enemy.length; i++){
+		ctx.fillStyle = "blue";
+		ctx.fillRect(enemy[i].x,enemy[i].y,50,50);
+	}
+}
+
+function renderPlayer(){
+	ctx.fillStyle = "black";
+	ctx.fillRect(x,y,100,100);
+}
+
+function renderShot(){
+	for(var i = 0; i<shots.length; i++){
 		ctx.fillStyle = "green";
 		ctx.fillRect(shots[i].x,shots[i].y,10,10);
 	}
 }
 
-function updateKeyboard(dt){
+function handleKeyboard(dt){
 
-	ctx.clearRect(x-1,y-1,102,102);
 	//Move Left (UP or W)
 	if(pressedKeys[38] || pressedKeys[87]){
 		vy -= PLAYER_SPEED * dt;
@@ -177,7 +227,7 @@ function mouseController(e){
 	e=e||event;
 	mousePosition[0] = e.screenX;
 	mousePosition[1] = e.screenY;
-	shots[shots.length] = new Shot(x, y, mousePosition[0], mousePosition[1]);
+	shots[shots.length] = new Shot(x+40, y+40, mousePosition[0], mousePosition[1]);
 	shots[shots.length-1].xToFollow = shots[shots.length-1].mx - shots[shots.length-1].x;
 	shots[shots.length-1].yToFollow = shots[shots.length-1].my - shots[shots.length-1].y;
 	var hypotenuse = Math.sqrt( (shots[shots.length-1].xToFollow*shots[shots.length-1].xToFollow)+(shots[shots.length-1].yToFollow*shots[shots.length-1].yToFollow) );
@@ -212,6 +262,27 @@ function checkBoundaries(){
 	}
 }
 
+function checkBoundariesEnemy(){
+	for(var i = 0; i<enemy.length; i++){
+		if(enemy[i].x + 100 >= canvas.width){
+			enemy[i].x = canvas.width - 100;
+		}
+		else if(enemy[i].x <= 0){
+			enemy[i].x = 0;
+		}
+		if(enemy[i].y + 100 >= canvas.height){
+			enemy[i].y = canvas.height - 100;
+		}
+		else if(enemy[i].y <= 0){
+			enemy[i].y = 0;
+		}
+	}
+}
+
+function randomize(limit){
+	return Math.floor(Math.random()*limit)+1;
+}
+
 window.onkeydown = KeyPressed;
 window.onkeyup = KeyReleased;
 canvas.onclick = mouseController;
@@ -224,6 +295,7 @@ function main() {
 	var dt = (now - lastTime) / 1000.0;
 
 	update(dt);
+	render();
 
 		if(!paused){
 			gameTime += dt;
