@@ -18,11 +18,12 @@ var x;
 var y;
 var vx;
 var vy;
-var gameTime = 0;
+var gameTime = 0.0;
 var paused = false;
 var PLAYER_SPEED = 20;
 var PLAYER_FRICTION = 0.99;
 var pressingKey;
+var enemyCoolDown = 0.5;
 var enemy = [];
 var shots = [];
 
@@ -31,6 +32,9 @@ function setupPlayer(player){
 	y = player[0].y;
 	vx = player[0].vx;
 	vy = player[0].vy;
+	enemy[0] = new Enemy(400,150);
+	enemy[1] = new Enemy(600,350);
+	enemy[2] = new Enemy(500,550);
         //update: [success: 'alert("ok");', failure: 'alert("nok");'],        
 }
 
@@ -41,9 +45,7 @@ function Enemy(x, y){
 	this.height = 50;
 	this.alertState = false;
 	this.range = 50;
-	this.ok;
-	this.deadX = -100;
-	this.deadY = -100;
+	this.lastTime = 0;
 }
 
 function Shot(x, y, mx, my, xToFollow, yToFollow){
@@ -54,10 +56,6 @@ function Shot(x, y, mx, my, xToFollow, yToFollow){
 	this.xToFollow = xToFollow;
 	this.yToFollow = yToFollow;
 }
-
-enemy[0] = new Enemy(400,150);
-enemy[1] = new Enemy(600,350);
-enemy[2] = new Enemy(500,550);
 
 function update(dt){
 
@@ -70,8 +68,8 @@ function update(dt){
 	}
 
 	handleKeyboard(dt);
-	updateEnemy();
-	updateShotCollision(dt);
+	updateEnemy(dt);
+	updateShotCollision();
 	updatePlayer();
 	updateShot();
 
@@ -89,11 +87,13 @@ function updatePlayer(){
 	checkBoundaries();
 }
 
-function updateEnemy(){
+function updateEnemy(dt){
 
 	for(var i = 0; i<enemy.length; i++){
 
-		if(enemy[i].alertState){
+		enemy[i].lastTime += dt;
+	
+		if(enemy[i].alertState && enemy[i].lastTime > enemyCoolDown){
 
 			var direction = randomize(3) + 1;
 			console.log(direction);
@@ -110,6 +110,7 @@ function updateEnemy(){
 				enemy[i].y -= 100;
 			}
 			enemy[i].alertState = false;
+			enemy[i].lastTime = 0;
 			return;
 		}
 	}
@@ -131,13 +132,14 @@ function updateShot(){
 	}
 }
 
-function updateShotCollision(dt){
+function updateShotCollision(){
 	
 	for(var i = 0; i<shots.length; i++){
 		for(var j = 0; j<enemy.length; j++){
 			if(shots[i].x > (enemy[j].x - enemy[j].range) && shots[i].x < (enemy[j].x + enemy[j].width + enemy[j].range)){
 				if(shots[i].y > (enemy[j].y - enemy[j].range) && shots[i].y < (enemy[j].y + enemy[j].height + enemy[j].range)){
-					enemy[j].alertState = true;
+					if(enemy[j].lastTime > enemyCoolDown)
+						enemy[j].alertState = true;
 				}
 			}
 			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width)){
@@ -287,7 +289,7 @@ window.onkeydown = KeyPressed;
 window.onkeyup = KeyReleased;
 canvas.onclick = mouseController;
 
-var lastTime;
+var lastTime = 0;
 
 function main() {
 
@@ -297,9 +299,9 @@ function main() {
 	update(dt);
 	render();
 
-		if(!paused){
+	if(!paused){
 			gameTime += dt;
-		}
+	}	
 
 	lastTime = now;
 	requestAnimFrame(main);
