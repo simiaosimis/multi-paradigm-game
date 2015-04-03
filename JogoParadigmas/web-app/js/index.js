@@ -26,6 +26,7 @@ var pressingKey;
 var enemyCoolDown = 0.5;
 var enemy = [];
 var shots = [];
+var score = 0;
 
 function setupPlayer(player){
 	x = player[0].x;
@@ -150,12 +151,14 @@ function updateShotCollision(){
 				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
 					shots.splice(i,1);
 					enemy.splice(j,1);
+					enemy[enemy.length] = new Enemy(randomize(canvas.width/50) * 50, randomize(canvas.height/50) * 50);
+					score++;
 					return;
 				}	
 			}
 			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy"){
 				if(shots[i].y > y && shots[i].y < (y + 100)){
-					alert("player morto");
+					alert("player morto, score: " + score);
 				}	
 			}
 		}
@@ -185,7 +188,10 @@ function renderPlayer(){
 
 function renderShot(){
 	for(var i = 0; i<shots.length; i++){
-		ctx.fillStyle = "green";
+		if(shots[i].owner == "player")
+			ctx.fillStyle = "green";
+		if(shots[i].owner == "enemy")
+			ctx.fillStyle = "red";
 		ctx.fillRect(shots[i].x,shots[i].y,10,10);
 	}
 }
