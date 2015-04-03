@@ -48,11 +48,12 @@ function Enemy(x, y){
 	this.lastTime = 0;
 }
 
-function Shot(x, y, mx, my, xToFollow, yToFollow){
+function Shot(x, y, mx, my, owner, xToFollow, yToFollow){
 	this.x = x;
 	this.y = y;
-	this.mx = mx - 197;
-	this.my = my - 136 - (240 - window.pageYOffset);
+	this.mx = mx;
+	this.my = my;
+	this.owner = owner
 	this.xToFollow = xToFollow;
 	this.yToFollow = yToFollow;
 }
@@ -96,24 +97,27 @@ function updateEnemy(dt){
 		if(enemy[i].alertState && enemy[i].lastTime > enemyCoolDown){
 
 			var direction = randomize(3) + 1;
-			console.log(direction);
 			if(direction == 1){
-				enemy[i].x += 50;
+				enemy[i].x += enemy[i].width;
 			}
 			else if(direction == 2){
-				enemy[i].x -= 100;
+				enemy[i].x -= enemy[i].width*2;
 			}
 			else if(direction == 3){
-				enemy[i].y += 50;
+				enemy[i].y += enemy[i].height;
 			}
 			else if(direction == 4){
-				enemy[i].y -= 100;
+				enemy[i].y -= enemy[i].height*2;
 			}
+			spamShot(enemy[i].x + enemy[i].width/2, enemy[i].y + enemy[i].height/2, x, y, "enemy");
 			enemy[i].alertState = false;
 			enemy[i].lastTime = 0;
-			return;
+			continue;
 		}
+		
 	}
+
+	
 
 	checkBoundariesEnemy();
 }
@@ -142,11 +146,16 @@ function updateShotCollision(){
 						enemy[j].alertState = true;
 				}
 			}
-			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width)){
+			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width) && shots[i].owner == "player"){
 				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
 					shots.splice(i,1);
 					enemy.splice(j,1);
 					return;
+				}	
+			}
+			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy"){
+				if(shots[i].y > y && shots[i].y < (y + 100)){
+					alert("player morto");
 				}	
 			}
 		}
@@ -229,7 +238,13 @@ function mouseController(e){
 	e=e||event;
 	mousePosition[0] = e.screenX;
 	mousePosition[1] = e.screenY;
-	shots[shots.length] = new Shot(x+40, y+40, mousePosition[0], mousePosition[1]);
+	spamShot(x+40, y+40, mousePosition[0] - 197, mousePosition[1] - 136 - (240 - window.pageYOffset), "player");
+
+}
+
+function spamShot(posX, posY, destX, destY, owner){
+	
+	shots[shots.length] = new Shot(posX, posY, destX, destY, owner);
 	shots[shots.length-1].xToFollow = shots[shots.length-1].mx - shots[shots.length-1].x;
 	shots[shots.length-1].yToFollow = shots[shots.length-1].my - shots[shots.length-1].y;
 	var hypotenuse = Math.sqrt( (shots[shots.length-1].xToFollow*shots[shots.length-1].xToFollow)+(shots[shots.length-1].yToFollow*shots[shots.length-1].yToFollow) );
