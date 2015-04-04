@@ -27,6 +27,7 @@ var enemyCoolDown = 0.5;
 var enemy = [];
 var shots = [];
 var score = 0;
+var bgPattern;
 
 function setupPlayer(player){
 	x = player[0].x;
@@ -36,13 +37,18 @@ function setupPlayer(player){
 	createEnemy(400,150);
 	createEnemy(600,350);
 	createEnemy(500,550);
+	img = new Image();
+	img.src = "../images/wall.png";
+	img.onload = function(){
+	bgPattern = ctx.createPattern(img, 'repeat');
+	};
 }
 
 function createEnemy(x, y){
 	var img = new Image();
 	img.src = "../images/MyChar.png";
 	img.onload = function(){
-	var sprite = new Sprite(img, [0,1], [32,32], 2, [0,1,2,3,4,5], 'horizontal', false);
+	var sprite = new Sprite(img, [0,32], [32,32], 2, [0,1,2,3,4,5], 'horizontal', false);
 	enemy[enemy.length] = new Enemy(x,y, sprite);
 	};
 }
@@ -119,7 +125,7 @@ function updateEnemy(dt){
 			else if(direction == 4){
 				enemy[i].y -= enemy[i].height*2;
 			}
-			spamShot(enemy[i].x + enemy[i].width/2, enemy[i].y + enemy[i].height/2, x, y, "enemy");
+			spamShot(enemy[i].x + enemy[i].width/2, enemy[i].y + enemy[i].height/2, x + 50, y + 50, "enemy");
 			enemy[i].alertState = false;
 			enemy[i].lastTime = 0;
 			continue;
@@ -168,24 +174,27 @@ function updateShotCollision(){
 			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy"){
 				if(shots[i].y > y && shots[i].y < (y + 100)){
 					alert("player morto, score: " + score);
+					location.reload();
 				}	
 			}
 		}
 	}	
 }
 
-function renderAll(){
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	renderEnemy();
+function renderAll(dt){
+	ctx.fillStyle = bgPattern;
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	renderEnemy(dt);
 	renderPlayer();
 	renderShot();
 
 }
 
-function renderEnemy(){
+function renderEnemy(dt){
 	
 	for(var i = 0; i<enemy.length; i++){
-		enemy[i].sprite.render(enemy[i].x, enemy[i].y);
+		enemy[i].sprite.update(dt);
+		enemy[i].sprite.render(enemy[i].x, enemy[i].y, enemy[i].width, enemy[i].height);
 	}
 }
 
@@ -336,7 +345,7 @@ function Sprite(img, pos, size, speed, frames, dir, once) {
 			this._index += this.speed*dt;
 		},
 
-		render: function(posX, posy) {
+		render: function(posX, posy, w, h) {
 			var frame;
 
 			if(this.speed > 0) {
@@ -368,7 +377,7 @@ function Sprite(img, pos, size, speed, frames, dir, once) {
 						animX, animY,
 						this.size[0], this.size[1],
 						posX, posy,
-						this.size[0], this.size[1]);
+						w, h);
 		}
 	};
 
@@ -380,7 +389,7 @@ function main() {
 	var dt = (now - lastTime) / 1000.0;
 
 	update(dt);
-	renderAll();
+	renderAll(dt);
 
 	if(!paused){
 			gameTime += dt;
