@@ -33,17 +33,26 @@ function setupPlayer(player){
 	y = player[0].y;
 	vx = player[0].vx;
 	vy = player[0].vy;
-	enemy[0] = new Enemy(400,150);
-	enemy[1] = new Enemy(600,350);
-	enemy[2] = new Enemy(500,550);
-        //update: [success: 'alert("ok");', failure: 'alert("nok");'],        
+	createEnemy(400,150);
+	createEnemy(600,350);
+	createEnemy(500,550);
 }
 
-function Enemy(x, y){
+function createEnemy(x, y){
+	var img = new Image();
+	img.src = "../images/MyChar.png";
+	img.onload = function(){
+	var sprite = new Sprite(img, [0,1], [32,32], 2, [0,1,2,3,4,5], 'horizontal', false);
+	enemy[enemy.length] = new Enemy(x,y, sprite);
+	};
+}
+
+function Enemy(x, y, sprite){
 	this.x = x;
 	this.y = y;
 	this.width = 50;
 	this.height = 50;
+	this.sprite = sprite;
 	this.alertState = false;
 	this.range = 50;
 	this.lastTime = 0;
@@ -151,7 +160,7 @@ function updateShotCollision(){
 				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
 					shots.splice(i,1);
 					enemy.splice(j,1);
-					enemy[enemy.length] = new Enemy(randomize(canvas.width/50) * 50, randomize(canvas.height/50) * 50);
+					createEnemy(randomize(canvas.width/50) * 50, randomize(canvas.height/50) * 50);
 					score++;
 					return;
 				}	
@@ -165,7 +174,7 @@ function updateShotCollision(){
 	}	
 }
 
-function render(){
+function renderAll(){
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	renderEnemy();
 	renderPlayer();
@@ -176,8 +185,7 @@ function render(){
 function renderEnemy(){
 	
 	for(var i = 0; i<enemy.length; i++){
-		ctx.fillStyle = "blue";
-		ctx.fillRect(enemy[i].x,enemy[i].y,50,50);
+		enemy[i].sprite.render(enemy[i].x, enemy[i].y);
 	}
 }
 
@@ -310,6 +318,60 @@ window.onkeydown = KeyPressed;
 window.onkeyup = KeyReleased;
 canvas.onclick = mouseController;
 
+function Sprite(img, pos, size, speed, frames, dir, once) {
+		this.img = img; // The path to the image for this sprite
+		this.pos = pos; // The x,y coordinate in the image for this sprite
+		this.size = size; // Size of the sprite (the keyframe)
+		this.speed = typeof speed === 'number' ? speed : 0; // Speed in frames per second for animating
+		this.frames = frames; // An array of frame indexes for animating
+		this.dir = dir || 'horizontal'; // Which direction to move in the sprite map when animating
+		this.once = once; // True to run the animation once, defaults to false
+		this._index = 0;
+		this.width = this.size[0];
+		this.height = this.size[1];
+	};
+
+	Sprite.prototype = {
+		update: function(dt) {
+			this._index += this.speed*dt;
+		},
+
+		render: function(posX, posy) {
+			var frame;
+
+			if(this.speed > 0) {
+				var max = this.frames.length;
+				var idx = Math.floor(this._index);
+				frame = this.frames[idx % max];
+
+				if(this.once && idx >= max) {
+					this.done = true;
+					return;
+				}
+			}
+			else {
+				frame = 0;
+			}
+
+
+			var animX = this.pos[0];
+			var animY = this.pos[1];
+
+			if(this.dir == 'vertical') {
+				animY += frame * this.size[1];
+			}
+			else {
+				animX += frame * this.size[0];
+			}
+
+			ctx.drawImage(this.img,
+						animX, animY,
+						this.size[0], this.size[1],
+						posX, posy,
+						this.size[0], this.size[1]);
+		}
+	};
+
 var lastTime = 0;
 
 function main() {
@@ -318,7 +380,7 @@ function main() {
 	var dt = (now - lastTime) / 1000.0;
 
 	update(dt);
-	render();
+	renderAll();
 
 	if(!paused){
 			gameTime += dt;
