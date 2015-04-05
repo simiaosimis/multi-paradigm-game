@@ -37,9 +37,9 @@ function setupPlayer(player_){
 	vx = player_[0].vx;
 	vy = player_[0].vy;
 
-	createEnemy(400,150);
-	createEnemy(600,350);
-	createEnemy(500,550);
+	createEnemy(400,150, false);
+	createEnemy(600,350, false);
+	createEnemy(500,550, false);
 	createBackGround();
 	
 }
@@ -52,7 +52,7 @@ function createBackGround(){
 	};
 }
 
-function createEnemy(x, y){
+function createEnemy(x, y, flash){
 	var img = new Image();
 	img.src = "../images/NpcKaze.png";
 	img.onload = function(){
@@ -75,6 +75,10 @@ function Enemy(x, y, sprite){
 	this.width = 50;
 	this.height = 50;
 	this.sprite = sprite;
+	this.flash = 0;
+	this.oldX;
+	this.oldY;
+	this.spriteFlash;
 	this.alertState = false;
 	this.range = 50;
 	this.lastTime = 0;
@@ -127,7 +131,9 @@ function updateEnemy(dt){
 		enemy[i].lastTime += dt;
 	
 		if(enemy[i].alertState && enemy[i].lastTime > enemyCoolDown){
-
+			enemy[i].flash = 1;
+			enemy[i].oldX = enemy[i].x;
+			enemy[i].oldY = enemy[i].y;
 			var direction = randomize(3) + 1;
 			if(direction == 1){
 				enemy[i].x += enemy[i].width;
@@ -148,8 +154,6 @@ function updateEnemy(dt){
 		}
 		
 	}
-
-	
 
 	checkBoundariesEnemy();
 }
@@ -180,9 +184,15 @@ function updateShotCollision(){
 			}
 			if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width) && shots[i].owner == "player"){
 				if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
+					
+					do{
+					var newPosX = randomize(canvas.width/50) * 50;
+					var newPosY = randomize(canvas.height/50) * 50
+					}while(Math.abs(newPosX - x + 35) < 300 && Math.abs(newPosX - y + 35) < 300);
+
+					createEnemy(newPosX, newPosY, false);
 					shots.splice(i,1);
 					enemy.splice(j,1);
-					createEnemy(randomize(canvas.width/50) * 50, randomize(canvas.height/50) * 50);
 					score++;
 					return;
 				}	
@@ -211,6 +221,18 @@ function renderEnemy(dt){
 	for(var i = 0; i<enemy.length; i++){
 		enemy[i].sprite.update(dt);
 		enemy[i].sprite.render(enemy[i].x, enemy[i].y, enemy[i].width, enemy[i].height);
+		if(enemy[i].flash == 1){
+			var img2 = new Image();
+			img2.src = "../images/flash.png";
+			enemy[i].spriteFlash = new Sprite(img2, [0,0], [40,40], 15, [0,1,2,3], 'horizontal', true);
+			enemy[i].flash = 2;
+		}
+		if(enemy[i].flash == 2){
+			if(!enemy[i].spriteFlash.done){
+				enemy[i].spriteFlash.update(dt);
+				enemy[i].spriteFlash.render(enemy[i].oldX, enemy[i].oldY, enemy[i].width, enemy[i].height);
+			}
+		}
 	}
 }
 
