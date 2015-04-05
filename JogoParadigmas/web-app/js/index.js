@@ -28,15 +28,21 @@ var enemy = [];
 var shots = [];
 var score = 0;
 var bgPattern;
+var dead = false;
 
-function setupPlayer(player){
-	x = player[0].x;
-	y = player[0].y;
-	vx = player[0].vx;
-	vy = player[0].vy;
+function setupPlayer(player_){
+	x = player_[0].x;
+	y = player_[0].y;
+	vx = player_[0].vx;
+	vy = player_[0].vy;
+	
 	createEnemy(400,150);
 	createEnemy(600,350);
 	createEnemy(500,550);
+	createBackGround();
+}
+
+function createBackGround(){
 	img = new Image();
 	img.src = "../images/wall.png";
 	img.onload = function(){
@@ -46,11 +52,19 @@ function setupPlayer(player){
 
 function createEnemy(x, y){
 	var img = new Image();
-	img.src = "../images/MyChar.png";
+	img.src = "../images/NpcKaze.png";
 	img.onload = function(){
-	var sprite = new Sprite(img, [0,32], [32,32], 2, [0,1,2,3,4,5], 'horizontal', false);
+	var sprite = new Sprite(img, [0,0], [48,48], 8, [0,1,2,1], 'horizontal', false);
 	enemy[enemy.length] = new Enemy(x,y, sprite);
 	};
+}
+
+function Player(x,y,vx,vy,sprite){
+	this.x = x;
+	this.y = y;
+	this.vx = vx;
+	this.vy = vy;
+	this.sprite = sprite;
 }
 
 function Enemy(x, y, sprite){
@@ -171,9 +185,10 @@ function updateShotCollision(){
 					return;
 				}	
 			}
-			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy"){
+			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy" && !dead){
 				if(shots[i].y > y && shots[i].y < (y + 100)){
-					alert("player morto, score: " + score);
+					jQuery.ajax({type:'POST',data:'attr=' + score, url:'/JogoParadigmas/player/printa'});
+					dead = true;
 					location.reload();
 				}	
 			}
@@ -185,7 +200,7 @@ function renderAll(dt){
 	ctx.fillStyle = bgPattern;
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	renderEnemy(dt);
-	renderPlayer();
+	renderPlayer(dt);
 	renderShot();
 
 }
@@ -198,7 +213,7 @@ function renderEnemy(dt){
 	}
 }
 
-function renderPlayer(){
+function renderPlayer(dt){
 	ctx.fillStyle = "black";
 	ctx.fillRect(x,y,100,100);
 }
@@ -242,6 +257,9 @@ function handleKeyboard(dt){
 	}
 	else{
 	}
+
+	//player[0].sprite.frames = [0,1,2,1];
+	//player[0].sprite.once = false;
 
 }
 

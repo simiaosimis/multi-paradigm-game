@@ -6,7 +6,7 @@
 </head>
 <body>
   <div class="body" role="main">
-  <canvas id = "tela" width = "950" height = "600"  background-image: url("images/wall.png");></canvas>
+  <canvas id = "tela" width = "950" height = "600"></canvas>
 
   <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery-1.11.2.js')}"></script>
     <script type="text/javascript" src="${resource(dir: 'js', file: 'index.js')}"></script>
