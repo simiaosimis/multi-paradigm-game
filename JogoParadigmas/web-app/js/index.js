@@ -29,21 +29,23 @@ var shots = [];
 var score = 0;
 var bgPattern;
 var dead = false;
+var jogador = 0;
 
 function setupPlayer(player_){
 	x = player_[0].x;
 	y = player_[0].y;
 	vx = player_[0].vx;
 	vy = player_[0].vy;
-	
+
 	createEnemy(400,150);
 	createEnemy(600,350);
 	createEnemy(500,550);
 	createBackGround();
+	
 }
 
 function createBackGround(){
-	img = new Image();
+	var img = new Image();
 	img.src = "../images/wall.png";
 	img.onload = function(){
 	bgPattern = ctx.createPattern(img, 'repeat');
@@ -59,7 +61,7 @@ function createEnemy(x, y){
 	};
 }
 
-function Player(x,y,vx,vy,sprite){
+function CreatePlayer(x,y,vx,vy,sprite){
 	this.x = x;
 	this.y = y;
 	this.vx = vx;
@@ -139,7 +141,7 @@ function updateEnemy(dt){
 			else if(direction == 4){
 				enemy[i].y -= enemy[i].height*2;
 			}
-			spamShot(enemy[i].x + enemy[i].width/2, enemy[i].y + enemy[i].height/2, x + 50, y + 50, "enemy");
+			spamShot(enemy[i].x + enemy[i].width/2, enemy[i].y + enemy[i].height/2, x + 35, y + 35, "enemy");
 			enemy[i].alertState = false;
 			enemy[i].lastTime = 0;
 			continue;
@@ -185,8 +187,8 @@ function updateShotCollision(){
 					return;
 				}	
 			}
-			if(shots[i].x > x && shots[i].x < (x + 100) && shots[i].owner == "enemy" && !dead){
-				if(shots[i].y > y && shots[i].y < (y + 100)){
+			if(shots[i].x > x && shots[i].x < (x + 70) && shots[i].owner == "enemy" && !dead){
+				if(shots[i].y > y && shots[i].y < (y + 70)){
 					jQuery.ajax({type:'POST',data:'attr=' + score, url:'/JogoParadigmas/player/printa'});
 					dead = true;
 					location.reload();
@@ -206,7 +208,6 @@ function renderAll(dt){
 }
 
 function renderEnemy(dt){
-	
 	for(var i = 0; i<enemy.length; i++){
 		enemy[i].sprite.update(dt);
 		enemy[i].sprite.render(enemy[i].x, enemy[i].y, enemy[i].width, enemy[i].height);
@@ -214,8 +215,24 @@ function renderEnemy(dt){
 }
 
 function renderPlayer(dt){
-	ctx.fillStyle = "black";
-	ctx.fillRect(x,y,100,100);
+	if(jogador == 0){
+		var img2 = new Image();
+		img2.src = "../images/MyChar.png";
+		var sprite = new Sprite(img2, [0,32], [32,32], 0, [0,1,2,1], 'horizontal', false);
+		jogador = new CreatePlayer(x,y, vx, vy, sprite);
+	}
+	if(pressingKey){
+
+		jogador.sprite.speed = 5;
+		jogador.sprite.once = false;
+	}
+	else{
+		jogador.sprite.speed = 0;
+		jogador.sprite.once = true;	
+	}
+
+	jogador.sprite.update(dt);
+	jogador.sprite.render(x,y,70,70);
 }
 
 function renderShot(){
@@ -258,9 +275,6 @@ function handleKeyboard(dt){
 	else{
 	}
 
-	//player[0].sprite.frames = [0,1,2,1];
-	//player[0].sprite.once = false;
-
 }
 
 function KeyPressed(e){
@@ -279,7 +293,7 @@ function mouseController(e){
 	e=e||event;
 	mousePosition[0] = e.screenX;
 	mousePosition[1] = e.screenY;
-	spamShot(x+40, y+40, mousePosition[0] - 197, mousePosition[1] - 136 - (240 - window.pageYOffset), "player");
+	spamShot(x+35, y+35, mousePosition[0] - 197, mousePosition[1] - 136 - (240 - window.pageYOffset), "player");
 
 }
 
@@ -302,16 +316,16 @@ function initializeKeys(){
 }
 
 function checkBoundaries(){
-	if(x + 100 >= canvas.width){
-		x = canvas.width - 100;
+	if(x + 70 >= canvas.width){
+		x = canvas.width - 70;
 		vx /= 2;
 	}
 	else if(x <= 0){
 		x = 0;
 		vx /= 2;
 	}
-	if(y + 100 >= canvas.height){
-		y = canvas.height - 100;
+	if(y + 70 >= canvas.height){
+		y = canvas.height - 70;
 		vy /= 2;
 	}
 	else if(y <= 0){
@@ -322,14 +336,14 @@ function checkBoundaries(){
 
 function checkBoundariesEnemy(){
 	for(var i = 0; i<enemy.length; i++){
-		if(enemy[i].x + 100 >= canvas.width){
-			enemy[i].x = canvas.width - 100;
+		if(enemy[i].x + 50 >= canvas.width){
+			enemy[i].x = canvas.width - 50;
 		}
 		else if(enemy[i].x <= 0){
 			enemy[i].x = 0;
 		}
-		if(enemy[i].y + 100 >= canvas.height){
-			enemy[i].y = canvas.height - 100;
+		if(enemy[i].y + 50 >= canvas.height){
+			enemy[i].y = canvas.height - 50;
 		}
 		else if(enemy[i].y <= 0){
 			enemy[i].y = 0;
@@ -356,14 +370,12 @@ function Sprite(img, pos, size, speed, frames, dir, once) {
 		this._index = 0;
 		this.width = this.size[0];
 		this.height = this.size[1];
-	};
-
-	Sprite.prototype = {
-		update: function(dt) {
+	
+	this.update = function(dt) {
 			this._index += this.speed*dt;
-		},
+	}
 
-		render: function(posX, posy, w, h) {
+	this.render = function(posX, posy, w, h) {
 			var frame;
 
 			if(this.speed > 0) {
@@ -396,8 +408,9 @@ function Sprite(img, pos, size, speed, frames, dir, once) {
 						this.size[0], this.size[1],
 						posX, posy,
 						w, h);
-		}
-	};
+	}
+}
+
 
 var lastTime = 0;
 
