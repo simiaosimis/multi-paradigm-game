@@ -11,7 +11,7 @@ class User {
 	int userRankPosition
 	int userScore
 	Date   userAge
-	boolean enabled
+	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
