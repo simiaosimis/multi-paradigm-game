@@ -89,6 +89,7 @@ function Shot(x, y, mx, my, owner, xToFollow, yToFollow){
 	this.y = y;
 	this.mx = mx;
 	this.my = my;
+	this.sprite;
 	this.owner = owner
 	this.xToFollow = xToFollow;
 	this.yToFollow = yToFollow;
@@ -199,7 +200,7 @@ function updateShotCollision(){
 			}
 			if(shots[i].x > x && shots[i].x < (x + 70) && shots[i].owner == "enemy" && !dead){
 				if(shots[i].y > y && shots[i].y < (y + 70)){
-					jQuery.ajax({type:'POST',data:'attr=' + score, url:'/JogoParadigmas/player/printa'});
+					jQuery.ajax({type:'POST',data:'score=' + score, url:'/JogoParadigmas/player/printa'});
 					dead = true;
 					location.reload();
 				}	
@@ -239,42 +240,37 @@ function renderEnemy(dt){
 function renderPlayer(dt){
 	if(jogador == 0){
 		var img2 = new Image();
-		img2.src = "../images/MyChar.png";
+		img2.src = "../images/char.png";
 		var sprite = new Sprite(img2, [0,32], [32,32], 0, [0,1,2,1], 'horizontal', false);
 		jogador = new CreatePlayer(x,y, vx, vy, sprite);
 	}
 	if(Math.abs(vx) > 0.1 || Math.abs(vy) > 0.1){
 		if(Math.abs(vx) > Math.abs(vy)){
 			if(vx > 0){
-				jogador.sprite.pos = [0,32];
-				jogador.sprite.dir = "horizontal";
-				jogador.sprite.frames = [0,1,2,1];
+				jogador.sprite.pos = [0,64];
 			}
 			else{
-				jogador.sprite.pos = [0,0];
-				jogador.sprite.dir = "horizontal";
-				jogador.sprite.frames = [0,1,2,1];
+				jogador.sprite.pos = [0,32];
 			}
 			jogador.sprite.speed = 5;
 			jogador.sprite.once = false;
 		}
 		else{
 			if(vy > 0){
-				jogador.sprite.pos = [128,0];
-				jogador.sprite.dir = "vertical";
-				jogador.sprite.frames = [0,1];
+				jogador.sprite.pos = [0,0];
 			}
 			else{
-				jogador.sprite.pos = [224,0];
-				jogador.sprite.dir = "vertical";
-				jogador.sprite.frames = [0,1];
+				jogador.sprite.pos = [0,96];
+				
 			}
-			jogador.sprite.speed = 3;
-			jogador.sprite.once = false;
 		}
+		jogador.sprite.dir = "horizontal";
+		jogador.sprite.frames = [0,1,2,1];
+		jogador.sprite.speed = 5;
+		jogador.sprite.once = false;
 	}
 	else{
-		jogador.sprite.pos = [0,32];
+		jogador.sprite.pos[0] = 32;
 		jogador.sprite.speed = 0;
 		jogador.sprite.once = true;	
 	}
@@ -285,11 +281,15 @@ function renderPlayer(dt){
 
 function renderShot(){
 	for(var i = 0; i<shots.length; i++){
-		if(shots[i].owner == "player")
-			ctx.fillStyle = "green";
-		if(shots[i].owner == "enemy")
-			ctx.fillStyle = "red";
-		ctx.fillRect(shots[i].x,shots[i].y,10,10);
+		var img2 = new Image();
+		img2.src = "../images/Bullet.png";
+		if(shots[i].owner == "player"){
+			ctx.drawImage(img2,0,0,80,80,shots[i].x,shots[i].y,15,15);	
+		}
+		if(shots[i].owner == "enemy"){
+			ctx.drawImage(img2,464,0,80,80,shots[i].x,shots[i].y,15,15);		
+		}
+		
 	}
 }
 
