@@ -56,7 +56,7 @@ function createEnemy(x, y){
 	var img = new Image();
 	img.src = "../images/NpcKaze.png";
 	img.onload = function(){
-	var sprite = new Sprite(img, [0,0], [48,48], 8, [0,1,2,1], 'horizontal', false);
+	var sprite = new Sprite(img, [1,0], [48,46], 8, [0,1,2,1], 'horizontal', false);
 	enemy[enemy.length] = new Enemy(x,y, sprite);
 	};
 }
@@ -221,12 +221,38 @@ function renderPlayer(dt){
 		var sprite = new Sprite(img2, [0,32], [32,32], 0, [0,1,2,1], 'horizontal', false);
 		jogador = new CreatePlayer(x,y, vx, vy, sprite);
 	}
-	if(pressingKey){
-
-		jogador.sprite.speed = 5;
-		jogador.sprite.once = false;
+	if(Math.abs(vx) > 0.1 || Math.abs(vy) > 0.1){
+		if(Math.abs(vx) > Math.abs(vy)){
+			if(vx > 0){
+				jogador.sprite.pos = [0,32];
+				jogador.sprite.dir = "horizontal";
+				jogador.sprite.frames = [0,1,2,1];
+			}
+			else{
+				jogador.sprite.pos = [0,0];
+				jogador.sprite.dir = "horizontal";
+				jogador.sprite.frames = [0,1,2,1];
+			}
+			jogador.sprite.speed = 5;
+			jogador.sprite.once = false;
+		}
+		else{
+			if(vy > 0){
+				jogador.sprite.pos = [128,0];
+				jogador.sprite.dir = "vertical";
+				jogador.sprite.frames = [0,1];
+			}
+			else{
+				jogador.sprite.pos = [224,0];
+				jogador.sprite.dir = "vertical";
+				jogador.sprite.frames = [0,1];
+			}
+			jogador.sprite.speed = 3;
+			jogador.sprite.once = false;
+		}
 	}
 	else{
+		jogador.sprite.pos = [0,32];
 		jogador.sprite.speed = 0;
 		jogador.sprite.once = true;	
 	}
