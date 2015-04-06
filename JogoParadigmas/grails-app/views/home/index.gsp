@@ -6,8 +6,8 @@
 </head>
 
 <body>
-
-	<section id="intro" class="first" align="center">
+<div align="center">
+	<section id="intro" class="first" >
 		<h1>Welcome to a project game made with mult-paradigm!</h1>
 		<p>
 			<h3>What are you waiting for? Just click the button and play! </h3>
@@ -18,7 +18,7 @@
 		<br>
 		<br>
 	</section>
-		
+</div>		
 	    	
 	   		<div class="row">
 	    		<div class="col-md-4">
