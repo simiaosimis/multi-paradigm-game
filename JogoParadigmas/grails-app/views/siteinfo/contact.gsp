@@ -12,12 +12,15 @@
 			This game is a project to "Paradigmas de programação" class. Made by students of Universidade de Brasília. If you want to contact us, contact us on github.
 				
 		<br>
-			Simião Carvalho: https://github.com/simiaosimis
+			Simião Carvalho: <a href="https://github.com/simiaosimis">Github</a>
 		<br>	
-			Daniel Henrique: https://github.com/danielhmarinho
+			Daniel Henrique: <a href="https://github.com/danielhmarinho">Github</a>
 		<br>	
-			Maxwell Almeida: https://github.com/MaxAlmeida
+			Maxwell Almeida: <a href="https://github.com/MaxAlmeida">Github</a>
+		<br>	
 		</p>
+
+
 	</section>
 
 	

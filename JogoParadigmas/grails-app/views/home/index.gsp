@@ -37,8 +37,7 @@
 				See the repository on Github and send a pull request.
 				</b>	
 
-				https://github.com/simiaosimis/multi-paradigm-game
-				
+				<a href="https://github.com/simiaosimis/multi-paradigm-game">See our repository!</a>
 
 
 				</p>
