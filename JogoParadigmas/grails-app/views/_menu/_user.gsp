@@ -22,14 +22,13 @@
 			<li class="divider"></li>
 			<li class="button-container">
 
-				 <button class="btn btn-block btn-success" role="button" title="${message(code: 'security.register.label', default: 'Register')}">
-					
+				
 					<g:link controller="user" action="create">
 					<i class="icon-signin"></i> 
 					<g:message code="security.register.label"/>
 					</g:link>
 				
-				</button>
+				
 
 			</li>
 		</ul>
