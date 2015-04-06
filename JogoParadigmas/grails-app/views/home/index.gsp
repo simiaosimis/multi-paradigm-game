@@ -12,7 +12,7 @@
 		<p>
 			What are you waiting for? Just click the button and play! 
 		</p>
-		<g:link class="btn tn-large btn-warning" controller="user" action="create">Sign up and play!</g:link>
+		<g:link class="btn tn-large btn-warning" controller="player" action="index">PLAY</g:link>
 	</section>
 		
 	    	<div class="col-md-4" >

@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="layout" content="main"/>
+	<title><g:message code="default.welcome.title" args="[meta(name:'app.name')]"/> </title>
+  <meta name="layout" content="kickstart" />
 </head>
 <body>
   <div class="body" role="main">
