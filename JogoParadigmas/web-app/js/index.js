@@ -286,7 +286,7 @@ function renderShot(){
 		if(shots[i].owner == "player"){
 			ctx.drawImage(img2,0,0,80,80,shots[i].x,shots[i].y,15,15);	
 		}
-		if(shots[i].owner == "enemy"){
+		if(shots[i].owner == "enemy" && !dead){
 			ctx.drawImage(img2,464,0,80,80,shots[i].x,shots[i].y,15,15);		
 		}
 		
@@ -341,7 +341,7 @@ function mouseController(e){
 	e=e||event;
 	mousePosition[0] = e.screenX;
 	mousePosition[1] = e.screenY;
-	spamShot(x+35, y+35, mousePosition[0] - 197, mousePosition[1] - 136 - (240 - window.pageYOffset), "player");
+	spamShot(x+35, y+35, mousePosition[0] - 115, mousePosition[1] + 40 - (240 - window.pageYOffset), "player");
 
 }
 
