@@ -13,19 +13,12 @@
 			<div class="control-group fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')} required">
 				<label for="password" class="control-label"><g:message code="user.password.label" default="Password" /><span class="required-indicator">*</span></label>
 				<div class="controls">
-					<g:textField name="password" required="" value="${userInstance?.password}"/>
+					<g:passwordField name="password" required="" value="${userInstance?.password}"/>
 					<span class="help-inline">${hasErrors(bean: userInstance, field: 'password', 'error')}</span>
 				</div>
 			</div>
 
 
-			<div class="control-group fieldcontain ${hasErrors(bean: userInstance, field: 'userAge', 'error')} required">
-				<label for="userAge" class="control-label"><g:message code="user.userAge.label" default="User Age" /><span class="required-indicator">*</span></label>
-				<div class="controls">
-					<bs:datePicker name="userAge" precision="day"  value="${userInstance?.userAge}"  />
-					<span class="help-inline">${hasErrors(bean: userInstance, field: 'userAge', 'error')}</span>
-				</div>
-			</div>
 
 			<div class="control-group fieldcontain ${hasErrors(bean: userInstance, field: 'userEmail', 'error')} ">
 				<label for="userEmail" class="control-label"><g:message code="user.userEmail.label" default="User Email" /></label>
