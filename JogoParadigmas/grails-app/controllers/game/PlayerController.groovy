@@ -21,7 +21,7 @@ class PlayerController{
 
 		def user = springSecurityService.getCurrentUser()
 		print user.username
-		user.userScore = 10
+		user.userScore =  params.attr
 	}
 
 }
