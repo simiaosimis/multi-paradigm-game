@@ -98,3 +98,4 @@ log4j = {
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'game.User'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'game.UserAuthority'
 grails.plugins.springsecurity.authority.className = 'game.Authority'
+grails.plugins.springsecurity.auth.loginFormUrl = '/'
