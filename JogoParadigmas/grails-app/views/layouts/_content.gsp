@@ -1,7 +1,5 @@
 <div id="Content" class="container">
 	
-	
-	
 
 	<!-- print system messages (infos, warnings, etc) - not validation errors -->
 	<g:if test="${flash.message && !layout_noflashmessage}">

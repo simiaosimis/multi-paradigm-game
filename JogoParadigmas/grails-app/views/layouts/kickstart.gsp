@@ -40,7 +40,7 @@
    		<g:pageProperty name="page.header" />
 	</g:if>
 	<g:else>
-		<g:render template="/layouts/header"/>														
+																
 	</g:else>
 
 	<g:render template="/layouts/content"/>														
