@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.dao.DataIntegrityViolationException
 
 class PlayerController{
+	 static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	def springSecurityService
 	def index(){
 		[lista : Player.list() as grails.converters.JSON]
@@ -21,7 +22,19 @@ class PlayerController{
 
 		def user = springSecurityService.getCurrentUser()
 		print user.username
-		user.userScore =  params.attr
+		print params.score 
+		if (params.score > user.userScore)
+			user.userScore =  params.score
+		print "score: " + user.userScore
+	}
+
+	def highScore(){
+
+		  List<User> userList = User.list(max: 10, sort: "userScore", order: "desc")
+		[userList :userList] 
+		  
+		  
+
 	}
 
 }

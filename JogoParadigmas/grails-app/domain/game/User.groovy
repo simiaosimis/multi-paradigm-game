@@ -10,7 +10,6 @@ class User {
 	String userEmail
 	int userRankPosition
 	int userScore
-	Date   userAge
 	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
