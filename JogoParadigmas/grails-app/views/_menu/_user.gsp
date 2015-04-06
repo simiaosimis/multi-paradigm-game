@@ -21,8 +21,16 @@
 			</li>
 			<li class="divider"></li>
 			<li class="button-container">
-				<!-- NOTE: the renderDialog MUST be placed outside the NavBar (at least for Bootstrap 2.1.1): see bottom of main.gsp -->
-				<g:render template="/_common/modals/registerTextLink"/>
+
+				 <button class="btn btn-block btn-success" role="button" title="${message(code: 'security.register.label', default: 'Register')}">
+					
+					<g:link controller="user" action="create">
+					<i class="icon-signin"></i> 
+					<g:message code="security.register.label"/>
+					</g:link>
+				
+				</button>
+
 			</li>
 		</ul>
 
