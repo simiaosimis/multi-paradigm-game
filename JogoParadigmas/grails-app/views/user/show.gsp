@@ -59,12 +59,6 @@
 				
 			</tr>
 		
-			<tr class="prop">
-				<td valign="top" class="name"><g:message code="user.userAge.label" default="User Age" /></td>
-				
-				<td valign="top" class="value"><g:formatDate date="${userInstance?.userAge}" /></td>
-				
-			</tr>
 		
 			<tr class="prop">
 				<td valign="top" class="name"><g:message code="user.userEmail.label" default="User Email" /></td>
