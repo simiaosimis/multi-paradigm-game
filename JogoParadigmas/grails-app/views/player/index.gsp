@@ -9,7 +9,7 @@
   <canvas id = "tela" width = "950" height = "600"></canvas>
 
   <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery-1.11.2.js')}"></script>
-    <script type="text/javascript" src="${resource(dir: 'js', file: 'index.js')}"></script>
+    <script type="text/javascript" src="${resource(dir: 'js', file: 'procedures.js')}"></script>
     <script type="text/javascript">
   		setupPlayer(${lista});
   	</script>
