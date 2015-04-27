@@ -184,42 +184,34 @@ function updateShot(){
 }
 
 function updateShotCollision(){
-    
     for(var i = 0; i<shots.length; i++){
-   	 for(var j = 0; j<enemy.length; j++){
-   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x-enemy[j].range, enemy[j].y-enemy[j].range,
-   				 	 enemy[j].width + (enemy[j].range*2),enemy[j].height + (enemy[j].range*2))){
-   				 
-   				 
-   				 	 if(enemy[j].lastTime > enemyCoolDown)
-   					 enemy[j].alertState = true;
-   							
-   			 
-   		 }
-   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x, enemy[j].y,
-   				 	 enemy[j].width ,enemy[j].height ) && shots[i].owner == "player"){
-   				 
-   				 do{
-   				 var newPosX = randomize(canvas.width/50) * 50;
-   				 var newPosY = randomize(canvas.height/50) * 50
-   				 }while(Math.abs(newPosX - x + 35) < 300 && Math.abs(newPosX - y + 35) < 300);
+      for(var j = 0; j<enemy.length; j++){
+        if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x-enemy[j].range, enemy[j].y-enemy[j].range,
+          enemy[j].width + (enemy[j].range*2),enemy[j].height + (enemy[j].range*2))){
+           
+          if(enemy[j].lastTime > enemyCoolDown)
+            enemy[j].alertState = true;               
+        }
+        if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x, enemy[j].y,    
+          enemy[j].width ,enemy[j].height ) && shots[i].owner == "player"){
+             
+            do{
+              var newPosX = randomize(canvas.width/50) * 50;
+              var newPosY = randomize(canvas.height/50) * 50
+            }while(Math.abs(newPosX - x + 35) < 300 && Math.abs(newPosX - y + 35) < 300);
 
-   				 createEnemy(newPosX, newPosY, false);
-   				 shots.splice(i,1);
-   				 enemy.splice(j,1);
-   				 score++;
-   				 return;
-   			     
-   		 }
-   		 if(Haste.collison(shots[i].x, shots[i].y,x, y,
-   				 	 70 ,70 ) && shots[i].owner == "enemy" && !dead) {
-   		
-   				 jQuery.ajax({type:'POST',data:'score=' + score, url:'/JogoParadigmas/player/printa'});
-   				 dead = true;
-   				 location.reload();
-   			 }    
-   		 
-   	 }
+            createEnemy(newPosX, newPosY, false);
+            shots.splice(i,1);
+            enemy.splice(j,1);
+            score++;
+            return;
+        }
+        if(Haste.collison(shots[i].x, shots[i].y,x, y, 70 ,70 ) && shots[i].owner == "enemy" && !dead){
+          jQuery.ajax({type:'POST',data:'score=' + score, url:'/JogoParadigmas/player/printa'});
+          dead = true;
+          location.reload();
+        }    
+        }
     }    
 }
 
