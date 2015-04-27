@@ -187,14 +187,14 @@ function updateShotCollision(){
     
     for(var i = 0; i<shots.length; i++){
    	 for(var j = 0; j<enemy.length; j++){
-   		 if(shots[i].x > (enemy[j].x - enemy[j].range) && shots[i].x < (enemy[j].x + enemy[j].width + enemy[j].range)){
-   			 if(shots[i].y > (enemy[j].y - enemy[j].range) && shots[i].y < (enemy[j].y + enemy[j].height + enemy[j].range)){
-   				 if(enemy[j].lastTime > enemyCoolDown)
-   					 enemy[j].alertState = true;
-   			 }
+   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x-enemy[j].range, enemy[j].y-enemy[j].range,
+   				 	 enemy[j].width + (enemy[j].range*2),enemy[j].height + (enemy[j].range*2))){
+   				 
+   				if(enemy[j].lastTime > enemyCoolDown)
+   					 enemy[j].alertState = true;  							
    		 }
-   		 if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width) && shots[i].owner == "player"){
-   			 if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
+   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x, enemy[j].y,
+   				 	 enemy[j].width ,enemy[j].height ) && shots[i].owner == "player"){
    				 
    				 do{
    				 var newPosX = randomize(canvas.width/50) * 50;
@@ -206,15 +206,16 @@ function updateShotCollision(){
    				 enemy.splice(j,1);
    				 score++;
    				 return;
-   			 }    
+   			     
    		 }
-   		 if(shots[i].x > x && shots[i].x < (x + 70) && shots[i].owner == "enemy" && !dead){
-   			 if(shots[i].y > y && shots[i].y < (y + 70)){
+   		 if(Haste.collison(shots[i].x, shots[i].y,x, y,
+   				 	 70 ,70 ) && shots[i].owner == "enemy" && !dead) {
+   		
    				 jQuery.ajax({type:'POST',data:'score=' + score, url:'/JogoParadigmas/player/printa'});
    				 dead = true;
    				 location.reload();
    			 }    
-   		 }
+   		 
    	 }
     }    
 }

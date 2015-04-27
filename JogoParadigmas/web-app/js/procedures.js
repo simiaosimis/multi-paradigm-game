@@ -187,14 +187,17 @@ function updateShotCollision(){
     
     for(var i = 0; i<shots.length; i++){
    	 for(var j = 0; j<enemy.length; j++){
-   		 if(shots[i].x > (enemy[j].x - enemy[j].range) && shots[i].x < (enemy[j].x + enemy[j].width + enemy[j].range)){
-   			 if(shots[i].y > (enemy[j].y - enemy[j].range) && shots[i].y < (enemy[j].y + enemy[j].height + enemy[j].range)){
-   				 if(enemy[j].lastTime > enemyCoolDown)
+   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x-enemy[j].range, enemy[j].y-enemy[j].range,
+   				 	 enemy[j].width + (enemy[j].range*2),enemy[j].height + (enemy[j].range*2))){
+   				 
+   				 
+   				 	 if(enemy[j].lastTime > enemyCoolDown)
    					 enemy[j].alertState = true;
-   			 }
+   							
+   			 
    		 }
-   		 if(shots[i].x > enemy[j].x && shots[i].x < (enemy[j].x + enemy[j].width) && shots[i].owner == "player"){
-   			 if(shots[i].y > enemy[j].y && shots[i].y < (enemy[j].y + enemy[j].height)){
+   		 if(Haste.collison(shots[i].x, shots[i].y,enemy[j].x, enemy[j].y,
+   				 	 enemy[j].width ,enemy[j].height ) && shots[i].owner == "player"){
    				 
    				 do{
    				 var newPosX = randomize(canvas.width/50) * 50;
@@ -206,15 +209,16 @@ function updateShotCollision(){
    				 enemy.splice(j,1);
    				 score++;
    				 return;
-   			 }    
+   			     
    		 }
-   		 if(shots[i].x > x && shots[i].x < (x + 70) && shots[i].owner == "enemy" && !dead){
-   			 if(shots[i].y > y && shots[i].y < (y + 70)){
+   		 if(Haste.collison(shots[i].x, shots[i].y,x, y,
+   				 	 70 ,70 ) && shots[i].owner == "enemy" && !dead) {
+   		
    				 jQuery.ajax({type:'POST',data:'score=' + score, url:'/JogoParadigmas/player/printa'});
    				 dead = true;
    				 location.reload();
    			 }    
-   		 }
+   		 
    	 }
     }    
 }
@@ -2717,5 +2721,5 @@ function finalizeWeak(w) {
     return [0, B(A(E(w).fin, [0]))];
 }
 
-var _0=[0],_1=function(_2,_3,_4){return _4<0?[1,new T(function(){return [0,E(_2)[1]*_4+E(_3)[1]];}),_0]:[1,[0,_4],[1,new T(function(){return [0,E(_2)[1]*_4+E(_3)[1]];}),new T(function(){return B(_1(_2,_3,_4-10));})]];},_5=function(_6,_7){while(1){var _8=E(_6);if(!_8[0]){return E(_7);}else{_6=_8[2];var _9=[1,_8[1],_7];_7=_9;continue;}}},_a=function(_b,_c){var _d=E(_b);return _d[0]==0?E(_c):[1,_d[1],new T(function(){return B(_a(_d[2],_c));})];},_e=new T(function(){return B(unCStr(": empty list"));}),_f=new T(function(){return B(unCStr("Prelude."));}),_g=function(_h){return new F(function(){return err(B(_a(_f,new T(function(){return B(_a(_h,_e));}))));});},_i=new T(function(){return B(unCStr("tail"));}),_j=new T(function(){return B(_g(_i));}),_k=function(_l,_m,_n,_o,_){return new T(function(){var _p=new T(function(){return [0,(E(_o)[1]-E(_m)[1])/(E(_n)[1]-E(_l)[1])];}),_q=B(_5(B(_1(_p,new T(function(){return [0,E(_p)[1]* -E(_l)[1]+E(_m)[1]];}),950)),_0));return _q[0]==0?E(_j):E(_q[2]);});},_r=0,_s=new T(function(){return [0,"(function(s,f){Haste[s] = f;})"];}),_t=function(_u){var _v=B(A(_u,[_])),_w=_v;return E(_w);},_x=function(_y){return new F(function(){return _t(function(_){var _=0;return new F(function(){return eval(E(_y)[1]);});});});},_z=new T(function(){return B(_x(_s));}),_A=function(_B,_C){return function(_D,_){var _E=B(A(new T(function(){return B(A(_z,[E(E(_C)[1])]));}),[B(A(_B,[_D])),_])),_F=_E;return _r;};},_G=new T(function(){return [0,"line"];}),_H=new T(function(){return [0,"lst2arr"];}),_I=new T(function(){return B(_x(_H));}),_J=new T(function(){return [0,"(function(f) {  return (function() {      return (function(){        var args=Array.prototype.slice.call(arguments,0);        args.push(0);        return E(B(A(f, args)));    });  });})"];}),_K=new T(function(){return B(_x(_J));}),_L=function(_M,_){return new F(function(){return A(_K,[E(_M),_]);});},_N=function(_O,_){return new F(function(){return _L(_O,_);});},_P=function(_Q,_R){var _S=E(_R);return _S[0]==0?[0]:[1,new T(function(){return B(A(_Q,[_S[1]]));}),new T(function(){return B(_P(_Q,_S[2]));})];},_T=function(_U){return E(E(_U)[1]);},_V=function(_W){return new F(function(){return _t(function(_){var _=0;return new F(function(){return _N(function(_X){return function(_Y){return function(_Z){return function(_10){return new F(function(){return _t(function(_){var _=0,_11=B(A(new T(function(){return B(A(new T(function(){return B(A(new T(function(){return B(A(_W,[[0,_X]]));}),[[0,_Y]]));}),[[0,_Z]]));}),[[0,_10],_])),_12=_11;return new F(function(){return _t(function(_){var _=0;return new F(function(){return A(_I,[B(_P(_T,_12)),_]);});});});});});};};};},_);});});});},_13=new T(function(){return B(_A(_V,_G));}),_14=new T(function(){return B(A(_13,[_k]));}),_15=new T(function(){return E(_14);});
-var hasteMain = function() {B(A(_15, [0]));};hasteMain(); mymain();
+var _0=false,_1=true,_2=function(_3,_4,_5,_6,_7,_8,_){var _9=E(_3)[1],_a=E(_5)[1];if(_9<_a){return _0;}else{if(_9>_a+E(_7)[1]){return _0;}else{var _b=E(_4)[1],_c=E(_6)[1];return _b<_c?_0:_b>_c+E(_8)[1]?_0:_1;}}},_d=0,_e=new T(function(){return [0,"(function(s,f){Haste[s] = f;})"];}),_f=function(_g){var _h=B(A(_g,[_])),_i=_h;return E(_i);},_j=function(_k){return new F(function(){return _f(function(_){var _=0;return new F(function(){return eval(E(_k)[1]);});});});},_l=new T(function(){return B(_j(_e));}),_m=function(_n,_o){return function(_p,_){var _q=B(A(new T(function(){return B(A(_l,[E(E(_o)[1])]));}),[B(A(_n,[_p])),_])),_r=_q;return _d;};},_s=new T(function(){return [0,"collison"];}),_t=new T(function(){return [0,"(function(f) {  return (function() {      return (function(){        var args=Array.prototype.slice.call(arguments,0);        args.push(0);        return E(B(A(f, args)));    });  });})"];}),_u=new T(function(){return B(_j(_t));}),_v=function(_w,_){return new F(function(){return A(_u,[E(_w),_]);});},_x=function(_y,_){return new F(function(){return _v(_y,_);});},_z=new T(function(){return [0,"false"];}),_A=function(_){var _=0;return new F(function(){return A(_j,[_z,_]);});},_B=new T(function(){return B(_f(_A));}),_C=new T(function(){return [0,"true"];}),_D=function(_){var _=0;return new F(function(){return A(_j,[_C,_]);});},_E=new T(function(){return B(_f(_D));}),_F=function(_G){return new F(function(){return _f(function(_){var _=0;return new F(function(){return _x(function(_H){return function(_I){return function(_J){return function(_K){return function(_L){return function(_M){return new F(function(){return _f(function(_){var _=0,_N=B(A(new T(function(){return B(A(new T(function(){return B(A(new T(function(){return B(A(new T(function(){return B(A(new T(function(){return B(A(_G,[[0,_H]]));}),[[0,_I]]));}),[[0,_J]]));}),[[0,_K]]));}),[[0,_L]]));}),[[0,_M],_])),_O=_N;return !E(_O)?E(_B):E(_E);});});};};};};};},_);});});});},_P=new T(function(){return B(_m(_F,_s));}),_Q=[0],_R=function(_S,_T,_U){return _U<0?[1,new T(function(){return [0,E(_S)[1]*_U+E(_T)[1]];}),_Q]:[1,[0,_U],[1,new T(function(){return [0,E(_S)[1]*_U+E(_T)[1]];}),new T(function(){return B(_R(_S,_T,_U-10));})]];},_V=function(_W,_X){while(1){var _Y=E(_W);if(!_Y[0]){return E(_X);}else{_W=_Y[2];var _Z=[1,_Y[1],_X];_X=_Z;continue;}}},_10=function(_11,_12){var _13=E(_11);return _13[0]==0?E(_12):[1,_13[1],new T(function(){return B(_10(_13[2],_12));})];},_14=new T(function(){return B(unCStr(": empty list"));}),_15=new T(function(){return B(unCStr("Prelude."));}),_16=function(_17){return new F(function(){return err(B(_10(_15,new T(function(){return B(_10(_17,_14));}))));});},_18=new T(function(){return B(unCStr("tail"));}),_19=new T(function(){return B(_16(_18));}),_1a=function(_1b,_1c,_1d,_1e,_){return new T(function(){var _1f=new T(function(){return [0,(E(_1e)[1]-E(_1c)[1])/(E(_1d)[1]-E(_1b)[1])];}),_1g=B(_V(B(_R(_1f,new T(function(){return [0,E(_1f)[1]* -E(_1b)[1]+E(_1c)[1]];}),950)),_Q));return _1g[0]==0?E(_19):E(_1g[2]);});},_1h=new T(function(){return [0,"line"];}),_1i=new T(function(){return [0,"lst2arr"];}),_1j=new T(function(){return B(_j(_1i));}),_1k=function(_1l,_1m){var _1n=E(_1m);return _1n[0]==0?[0]:[1,new T(function(){return B(A(_1l,[_1n[1]]));}),new T(function(){return B(_1k(_1l,_1n[2]));})];},_1o=function(_1p){return E(E(_1p)[1]);},_1q=function(_1r){return new F(function(){return _f(function(_){var _=0;return new F(function(){return _x(function(_1s){return function(_1t){return function(_1u){return function(_1v){return new F(function(){return _f(function(_){var _=0,_1w=B(A(new T(function(){return B(A(new T(function(){return B(A(new T(function(){return B(A(_1r,[[0,_1s]]));}),[[0,_1t]]));}),[[0,_1u]]));}),[[0,_1v],_])),_1x=_1w;return new F(function(){return _f(function(_){var _=0;return new F(function(){return A(_1j,[B(_1k(_1o,_1x)),_]);});});});});});};};};},_);});});});},_1y=new T(function(){return B(_m(_1q,_1h));}),_1z=function(_){var _1A=B(A(_1y,[_1a,_])),_1B=_1A;return new F(function(){return A(_P,[_2,_]);});},_1C=function(_){return new F(function(){return _1z(_);});};
+var hasteMain = function() {B(A(_1C, [0]));};hasteMain(); mymain();
